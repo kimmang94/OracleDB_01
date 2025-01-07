@@ -1,0 +1,5 @@
+CREATE TABLE BOOKS (
+BOOKNO int PRIMARY KEY,
+NAME verchar(50),
+CODE varchar(50)
+);
