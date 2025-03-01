@@ -1,102 +1,35 @@
--- 곱산 산술 연산자를 사용한 예
-SELECT * 
-FROM EMP
-WHERE SAL * 12 = 36000;
+-- 테이블에서 특정 열(Column) 선택하기
 
--- 문자열을 대소 비교 연산자로 비교하기
-SELECT *
-FROM EMP
-WHERE ENAME <= 'FORZ';
+SELECT empno, ename, sal
+FROM emp;
 
--- 등가 비교 연산자(!=)를 사용하여 출력하기
+-- 테이블에서 모든 열(Column) 출력하기
 
 SELECT *
-FROM EMP
-WHERE SAL != 3000;
+FROM emp;
 
--- 등가 비교 연산자(<>) 를 사용하여 출력하기
+-- * 를 사용하지 않는다면 전체 열들을 나열해 줘야한다
 
-SELECT *
-FROM EMP
-WHERE SAL <> 3000;
+SELECT empno,
+ename,
+job,
+mgr,
+hiredate,
+sal,
+comm,
+deptno
+FROM emp;
 
--- 등가 비교 연산자(^=)를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE SAL ^= 3000;
+-- 컬럼 별칭을 사용하여 출력되는 컬럼명 변경하기
 
--- NOT 연산자를 사용하여 출력하기
+SELECT empno AS 사원번호,
+ename AS 사원이름,
+sal AS "Salary"
+FROM emp;
 
-SELECT *
-FROM EMP
-WHERE NOT SAL = 3000;
+-- 연결 연산자 사용하기 (||)
+SELECT ename || sal
+FROM emp;
 
--- OR 연산자를 사용하여 여러 개 조건을 만족하는 데이터 출력하기
-SELECT *
-FROM EMP
-WHERE JOB = 'MANAGER'
-OR JOB ='SALEMAN'
-OR JOB = 'CLERK';
-
--- IN 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE JOB IN ('MANAGER', 'SALESMANS', 'CLERK');
-
--- 등가 비교 연산자와 AND 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE JOB != 'MANNAGER'
-AND JOB <> 'SALESMAN'
-AND JOB ^= 'CLERK';
-
--- IN 연산자와 논리 부정 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE JOB NOT IN ('MANANGER', 'SALESMAN','CLERK');
-
--- 대소 비교 연산자와 AND 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE SAL >= 2000
-AND SAL <= 3000;
-
--- BETWEEN A AND B 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE SAL BETWEEN 2000 AND 3000;
-
--- BETWEEN A AND B 연산자와 NOT 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE SAL NOT BETWEEN 2000 AND 3000;
-
--- LIKE 연산자 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE ENAME LIKE 'S%';
-
--- 사원 이름의 두 번째 글자가 L인 사원만 출력하기
-SELECT *
-FROM EMP
-WHERE ENAME LIKE '_L%'
-
--- 사원 이름에 AM이 포함되어 있는 사원 데이터만 출력하기
-SELECT *
-FROM EMP
-WHERE ENAME LIKE '%AM%';
-
--- IS NULL 연산자를 사용하여 출력하기
-SELECT *
-FROM EMP
-WHERE COMM IS NULL;
-
--- 월급이 1000에서 3000사이인 사원들의 이름과 월급 출력
-SELECT ename, sal
-FROM emp
-WHERE sal BETWEEN 1000 AND 3000;
-
--- 1982년도에 입사한 사원들의 이름과 입사일을 조회
-SELECT ename, hiredate
-FROM emp
-WHERE hiredate BETWEEN '1982/01/01' AND '1982/12/31'
+SELECT ename || '의 월급은' || sal || '입니다' AS 월급정보
+FROM emp;
