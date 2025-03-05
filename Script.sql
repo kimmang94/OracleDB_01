@@ -173,3 +173,17 @@ WHERE (job = 'SALESMAN' OR job = 'ANALYST' OR job = 'MANAGER')
 SELECT ename, sal, job
 FROM emp
 WHERE job NOT IN ('SALESMAN', 'ANAYST', 'MANAGER')
+
+-- 논리 연산자 배우기 (AND , OR, NOT)
+
+SELECT ename, sal, job
+FROM emp
+WHERE job = 'SALESMAN' AND sal >= 1200;
+
+SELECT ename, sal, job
+FROM emp
+WHERE job = 'ABCDEFG' AND sal = 1200;
+
+-- 대소문자 변환 함수 배우기 (UPPER, LOWER, INITCAP)
+SELECT UPPER(ename), LOWER(ename), INITCAP(ename)
+FROM emp;
