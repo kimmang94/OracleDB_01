@@ -423,4 +423,127 @@ FROM emp
 WHERE job IN ('SALESMAN', 'ANALYST');
 
 
+-- ROW 를 COLUMN으로 출력하기(SUM + DECODE)
+SELECT SUM(DECODE(deptno, 10, sal)) AS "10",
+       SUM(DECODE(deptno, 20, sal)) AS "20",
+       SUM(DECODE(deptno, 30, sal)) AS "30"
+FROM emp;
 
+SELECT SUM(DECODE(deptno, 10, sal)) AS "10"
+FROM emp;
+
+SELECT SUM(DECODE(job, 'ANALYST', sal)) AS "ANALYST",
+	   SUM(DECODE(job, 'CLERK', sal)) AS "CLERK",
+	   SUM(DECODE(job, 'MANAGER', sal)) AS "MANAGER",
+	   SUM(DECODE(job, 'SALESMAN', sal)) AS "SALESMAN"
+FROM emp;
+
+SELECT DEPTNO, SUM(DECODE(job, 'ANALYST', sal)) AS "ANALYST",
+			   SUM(DECODE(job, 'CLERK', sal)) AS "CLERK",
+			   SUM(DECODE(job, 'MANAGER', sal)) AS "MANAGER",
+			   SUM(DECODE(job, 'SALESMAN', sal)) AS "SALESMAN"
+FROM emp
+GROUP BY deptno;
+
+
+-- ROW를 COLUMN 으로 출력하기 (PIVOT)
+SELECT *
+FROM (SELECT deptno, sal FROM emp)
+PIVOT (sum(sal) FOR deptno IN (10,20,30));
+
+
+SELECT *
+FROM (SELECT job, sal FROM emp)
+PIVOT (sum(sal) FOR job IN ('ANALYST', 'CLERK', 'MANAGER', 'SALESMAN'));
+
+
+SELECT *
+FROM (SELECT job, sal FROM emp)
+PIVOT (sum(sal) FOR job IN ('ANALYST' AS "ANALYST", 'CLERK' AS "CLERK", 'MANAGER' AS "MANAGER", 'SALESMAN' AS "SALESMAN"));
+
+
+drop  table order2;
+
+create table order2
+( ename  varchar2(10),
+  bicycle  number(10),
+  camera   number(10),
+  notebook  number(10) );
+
+insert  into  order2  values('SMITH', 2,3,1);
+insert  into  order2  values('ALLEN',1,2,3 );
+insert  into  order2  values('KING',3,2,2 );
+
+commit;
+
+-- COLUMN을 ROW로 출력하기 (UNPIVOT)
+SELECT *
+FROM order2
+UNPIVOT (건수 FOR 아이템 IN (BICYCLE, CAMERA, NOTEBOOK));
+
+SELECT *
+FROM order2
+UNPIVOT (건수 FOR 아이템 IN (BICYCLE AS 'B', CAMERA AS 'C', NOTEBOOK AS 'N'));
+
+UPDATE ORDER2 SET NOTEBOOK=NULL WHERE ENAME='SMITH';
+
+SELECT *
+FROM order2
+UNPIVOT INCLUDE NULLS (건수 FOR 아이템 IN (BICYCLE AS 'B', CAMERA AS 'C', NOTEBOOK AS 'N'));
+
+-- 데이터 분석 함수로 누적 데이터 출력하기 (SUM OVER)
+SELECT empno, ename, sal, SUM(SAL) OVER (ORDER BY empno ROWS
+										BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) 누적치
+FROM emp
+WHERE job IN ('ANALYST', 'MANAGER');
+
+-- 데이터 분석 함수로 비율 출력하기 (RATIO_TO_REPORT)
+
+SELECT empno, ename, sal, RATIO_TO_REPORT(sal) OVER () AS 비율
+FROM emp
+WHERE deptno = 20;
+
+SELECT empno, ename, sal, RATIO_TO_REPORT(sal) OVER () AS 비율,
+						  SAL/SUM(sal) OVER () AS "비교 비율"
+FROM emp
+WHERE deptno = 20;
+
+-- 데이터 분석 함수로 집계 결과 출력하기 (ROLLUP)
+SELECT job, sum(sal)
+FROM emp
+GROUP BY ROLLUP(job);
+
+SELECT deptno, job, sum(sal)
+FROM emp
+GROUP BY ROLLUP(deptno, job);
+
+-- 데이터 분석 함수로 집계결과 출력하기 (CUBE)
+
+SELECT job, sum(sal)
+FROM emp
+GROUP BY CUBE(job);
+
+SELECT deptno, job, sum(sal)
+FROM emp
+GROUP BY CUBE(deptno, job);
+
+-- 데이터 분석 함수로 집계 결과 출력하기 (GROUPING SETS)
+SELECT deptno, job, sum(sal)
+FROM emp
+GROUP BY GROUPING SETS((deptno), (job), ());
+
+-- 데이터 분석 함수로 출력 결과 넘버링 하기 (ROW_NUMBER)
+SELECT empno, ename, sal, RANK() OVER (ORDER BY sal DESC) RANK,
+						  DENSE_RANK() OVER (ORDER BY sal DESC) DENSE_RANK,
+						  ROW_NUMBER() OVER (ORDER BY sal DESC) 번호
+FROM emp
+WHERE deptno = 20;
+
+-- 에러발생
+SELECT empno, ename, sal , ROW_NUMBER() OVER() 번호
+FROM emp
+WHERE deptno = 20;
+
+SELECT deptno, ename, sal, ROW_NUMBER() OVER(PARTITION BY deptno ORDER BY sal DESC) 번호
+FROM emp
+WHERE deptno IN (10, 20);
