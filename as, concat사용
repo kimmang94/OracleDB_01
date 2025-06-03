@@ -23,3 +23,62 @@ case
     else '저체중'
 end
 from member
+
+-- 
+실습 설명
+코드잇 피자 가게는 피자의 가격과 원가 정보를 아래와 같은 pizza_price_cost 테이블에서 관리하고 있습니다.
+id	name	price	cost
+1	Potato Bacon Pizza	22000	14000
+2	Sweet Potato Pizza	24000	14000
+3	Combination Pizza	25000	13000
+4	Bacon Cheddar Pizza	32000	20000
+5	Pineapple Pizza	25000	22000
+6	Garlic Shrimp Pizza	26000	19000
+7	Cheeze Pizza	23000	17000
+8	Pepperoni Pizza	24000	13000
+이 테이블에서 price 컬럼은 피자 가격, cost 컬럼은 피자를 만드는데 드는 비용(원가)를 나타냅니다. 여기서 비용 대비 가격이 낮은, 즉 효율이 떨어지는 메뉴는 원가를 절감하는 방법을 찾거나 가격을 높이려고 하는데요. 아래 컬럼들을 포함하고, 요구 사항을 모두 만족하는 SQL문을 작성해 보세요!
+피자 이름(name) 컬럼
+가격(price) 컬럼
+효율성 컬럼
+원가 대비 가격(price를 cost로 나눈 값)을 구해 주세요.
+alias는 efficiency로 설정해 주세요.
+효율성 기준 카테고리 구분 컬럼
+efficiency 값에 따라 아래와 같이 구분된 값을 넣어 주세요.
+1 이상 1.5 미만: 저효율 메뉴
+1.5 이상 1.7 미만: 중효율 메뉴
+1.7 이상: 고효율 메뉴
+alias는 efficiency_category로 설정해 주세요.
+GURU
+이때 전체 로우를 efficiency 컬럼 기준, 그 다음 price 컬럼 순서대로 오름차순 정렬해 주세요. 여기서 위에서 5번째 로우까지만 출력합니다.
+실습 결과
+hmxzxdcx0-image.png
+실습 해설
+먼저, SELECT문에 name과 price 컬럼부터 적어준 후 price/cost 값을 계산하고 efficiency라는 alias를 붙입니다. 그리고 CASE문을 사용해 원가 대비 가격 비율 값의 범위에 따라 카테고리를 분류하고, 결과를 efficiency_category라는 별칭으로 표시해 주세요. 마지막으로, ORDER BY를 사용해 효율성(efficiency), 가격(price) 순서대로 오름차순 정렬하고, LIMIT으로 상위 5개의 메뉴만 출력합니다.
+모범 답안
+SELECT name,
+       price,
+       price/cost AS efficiency,
+       (CASE
+            WHEN price/cost >= 1 AND price/cost < 1.5 THEN '저효율 메뉴'
+            WHEN price/cost >= 1.5 AND price/cost < 1.7 THEN '중효율 메뉴'
+            WHEN price/cost >= 1.7 THEN '고효율 메뉴'
+        END) AS efficiency_category
+FROM pizza_price_cost
+ORDER BY efficiency ASC, price ASC
+LIMIT 5;
+힌트 2
+힌트 1
+이번 레슨은 어땠나요?
+--
+Select name,
+price,
+price / cost as efficiency,
+case
+    when (price / cost) >= 1.7 then '고효율 메뉴'
+    when (price / cost) >= 1.5 and (price / cost) < 1.7 then '중효율 메뉴'
+    when (price / cost) >= 1 and (price / cost) < 1.5 then '저효율 메뉴'
+end as efficiency_category
+
+from pizza_price_cost
+order by efficiency, price asc
+limit 5
