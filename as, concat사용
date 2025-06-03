@@ -82,3 +82,15 @@ end as efficiency_category
 from pizza_price_cost
 order by efficiency, price asc
 limit 5
+
+-- group by, having 사용
+select 
+    substring(address,1,2) as region,
+    gender,
+    count(*)
+from member
+group by    
+    substring(address,1,2),
+    gender
+having region = '서울'
+and gender = 'm'
