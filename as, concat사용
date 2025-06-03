@@ -1,0 +1,9 @@
+SELECT email as 이메일,
+height as 키,
+weight as 몸무게,
+weight / ((height / 100) * (height/100)) as BMI
+FROM memeber
+
+SELECT email as 이메일,
+CONCAT(height, 'cm', ', ', weight, 'kg') as '키와 몸무게',
+from member
