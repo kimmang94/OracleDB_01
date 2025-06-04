@@ -103,3 +103,8 @@ from item as i left outer join review as r
 on r.item_id = i.id
 left outer join member as m 
 on r.mem_id = m.id;
+
+-- union 사용하기
+select * from item
+union
+select * from item_new
